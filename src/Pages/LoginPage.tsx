@@ -1,21 +1,29 @@
 import { useState } from 'react'
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
 import { useNavigate, Link } from 'react-router-dom'
+import Grid from '@mui/material/Grid'
 import Input from '@mui/material/Input'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 import ErrorText from '../components/ErrorText'
 import api from '../api/api'
 
+const Wrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
 const FormWrapper = styled.div`
   width: 400px;
-  height: 400px;
   margin: auto;
   text-align: center;
 `
 
 const WelcomeMessage = styled.h1`
   text-align: center;
+  margin-bottom: 50px;
 `
 
 const LoginPage = () => {
@@ -62,35 +70,39 @@ const LoginPage = () => {
   }
 
   return (
-    <div>
-      <WelcomeMessage>Welcome to Shorten Url Service</WelcomeMessage>
-      <FormWrapper>
-        Want to join us?&nbsp;<Link to="/signup">Sign Up</Link>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            fullWidth
-            error={!!errors.email}
-            placeholder="email"
-            {...register('email', { required: true })}
-          />
-          <br />
-          <Input
-            fullWidth
-            error={!!errors.password}
-            type="password"
-            placeholder="password"
-            {...register('password', { required: true })}
-          />
-          <br />
-          {
-            loginError.isShow && (<ErrorText>{loginError.error}</ErrorText>)
-          }
-          <Button type="submit">
-            Login
-          </Button>
-        </form>
-      </FormWrapper>
-    </div>
+    <Wrapper>
+      <Grid>
+        <WelcomeMessage>Welcome to Shorten Url Service</WelcomeMessage>
+      </Grid>
+      <Grid>
+        <FormWrapper>
+          Want to join us?&nbsp;<Link to="/signup">Sign Up</Link>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              fullWidth
+              error={!!errors.email}
+              placeholder="email"
+              {...register('email', { required: true })}
+            />
+            <br />
+            <Input
+              fullWidth
+              error={!!errors.password}
+              type="password"
+              placeholder="password"
+              {...register('password', { required: true })}
+            />
+            <br />
+            {
+              loginError.isShow && (<ErrorText>{loginError.error}</ErrorText>)
+            }
+            <Button type="submit">
+              Login
+            </Button>
+          </form>
+        </FormWrapper>
+      </Grid>
+    </Wrapper>
   )
 }
 
