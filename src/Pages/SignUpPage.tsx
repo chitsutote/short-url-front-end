@@ -4,13 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import Input from '@mui/material/Input'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
+import AuthLayout from '../components/AuthLayout'
 import ErrorText from '../components/ErrorText'
 import api from '../api/api'
 
 const FormWrapper = styled.div`
   width: 400px;
-  height: 400px;
-  margin: auto;
+  margin: 15px auto;
   text-align: center;
 `
 
@@ -56,7 +56,7 @@ const SignUpPage = () => {
   }
 
   return (
-    <div>
+    <AuthLayout>
       <WelcomeMessage>Become a member of Shorten URL Service</WelcomeMessage>
       <FormWrapper>
         Already have an account?&nbsp;<Link to="/login">Log in</Link>
@@ -79,12 +79,12 @@ const SignUpPage = () => {
           {
             signUpError.isShow && (<ErrorText>{signUpError.error}</ErrorText>)
           }
-          <Button type="submit">
+          <Button style={{ marginTop: '30px' }} variant="contained" type="submit">
             Sign Up
           </Button>
         </form>
       </FormWrapper>
-    </div>
+    </AuthLayout>
   )
 }
 

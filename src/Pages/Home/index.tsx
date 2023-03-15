@@ -128,6 +128,7 @@ function Home() {
         urlInputError.isError && (<ErrorText>Invalid Url</ErrorText>)
       }
       <SubmitButton
+        variant="contained"
         disabled={!urlInput || isShorteningUrl || urlInputError.isError}
         onClick={() => {
           createShortUrl()
