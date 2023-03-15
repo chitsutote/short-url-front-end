@@ -3,4 +3,5 @@ export default interface ShortUrlType {
   short_id: string
   original_url: string
   click_times: number
+  is_expired: boolean
 }

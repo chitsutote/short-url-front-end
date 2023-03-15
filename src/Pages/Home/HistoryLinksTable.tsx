@@ -23,6 +23,7 @@ const HistoryLinksTable = ({
             <TableCell>Original Url</TableCell>
             <TableCell>Short Url</TableCell>
             <TableCell>Click Times</TableCell>
+            <TableCell>Expired</TableCell>
             <TableCell>Copy it!</TableCell>
           </TableRow>
         </TableHead>
@@ -33,6 +34,7 @@ const HistoryLinksTable = ({
               original_url,
               short_id,
               click_times,
+              is_expired
             }, index) => (
               <TableRow
                 key={id}
@@ -42,8 +44,10 @@ const HistoryLinksTable = ({
                 <TableCell>{original_url}</TableCell>
                 <TableCell>{shortUrlBuilder(short_id)}</TableCell>
                 <TableCell>{click_times}</TableCell>
+                <TableCell>{is_expired ? 'yes' : 'no'}</TableCell>
                 <TableCell>
                   <Button
+                    disabled={is_expired}
                     onClick={() => {
                       navigator.clipboard.writeText(shortUrlBuilder(short_id))
                     }}
