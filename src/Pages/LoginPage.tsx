@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
 import { useNavigate, Link } from 'react-router-dom'
 import Input from '@mui/material/Input'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
+import ErrorText from '../components/ErrorText'
 import api from '../api/api'
 
 const FormWrapper = styled.div`
@@ -17,6 +19,13 @@ const WelcomeMessage = styled.h1`
 `
 
 const LoginPage = () => {
+  const [loginError, setLoginError] = useState<{
+    isShow: boolean
+    error: string | undefined
+  }>({
+    isShow: false,
+    error: undefined,
+  })
   const navigate = useNavigate()
   const {
     handleSubmit,
@@ -24,15 +33,31 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm()
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const response = await api.post('/login', {
-      email: data.email,
-      password: data.password,
-    })
+    try {
+      const response = await api.post('/login', {
+        email: data.email,
+        password: data.password,
+      })
 
-    if (response.status === 200 && !response?.data?.error) {
-      const { token } = response.data
-      localStorage.setItem('authToken', token)
-      navigate('/home')
+      if (response.status === 200 && !response?.data?.error) {
+        setLoginError({
+          isShow: false,
+          error: undefined,
+        })
+        const { token } = response.data
+        localStorage.setItem('authToken', token)
+        navigate('/home')
+      }
+    } catch (err) {
+      const error = err.response.data?.error
+      if (error) {
+        if (/Incorrect/g.test(error)) {
+          setLoginError({
+            isShow: true,
+            error: 'Incorrect email or password',
+          })
+        }
+      }
     }
   }
 
@@ -57,6 +82,9 @@ const LoginPage = () => {
             {...register('password', { required: true })}
           />
           <br />
+          {
+            loginError.isShow && (<ErrorText>{loginError.error}</ErrorText>)
+          }
           <Button type="submit">
             Login
           </Button>

@@ -34,7 +34,7 @@ const HistoryLinksTable = ({
               original_url,
               short_id,
               click_times,
-              is_expired
+              is_expired,
             }, index) => (
               <TableRow
                 key={id}

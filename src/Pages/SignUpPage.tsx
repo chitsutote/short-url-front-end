@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '@mui/material/Input'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
+import ErrorText from '../components/ErrorText'
 import api from '../api/api'
 
 const FormWrapper = styled.div`
@@ -17,6 +19,13 @@ const WelcomeMessage = styled.h1`
 `
 
 const SignUpPage = () => {
+  const [signUpError, setSignUpError] = useState<{
+    isShow: boolean
+    error: string | undefined
+  }>({
+    isShow: false,
+    error: undefined,
+  })
   const navigate = useNavigate()
   const {
     handleSubmit,
@@ -24,13 +33,25 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm()
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const response = await api.post('signup', {
-      email: data.email,
-      password: data.password,
-    })
+    try {
+      const response = await api.post('signup', {
+        email: data.email,
+        password: data.password,
+      })
 
-    if (response.status === 200 && !response?.data?.error) {
-      navigate('/login')
+      if (response.status === 200 && !response?.data?.error) {
+        navigate('/login')
+      }
+    } catch (err) {
+      const error = err.response.data?.error
+      if (error) {
+        if (/Invalid Email/g.test(error)) {
+          setSignUpError({
+            isShow: true,
+            error: 'Invalid Email',
+          })
+        }
+      }
     }
   }
 
@@ -55,6 +76,9 @@ const SignUpPage = () => {
             {...register('password', { required: true })}
           />
           <br />
+          {
+            signUpError.isShow && (<ErrorText>{signUpError.error}</ErrorText>)
+          }
           <Button type="submit">
             Sign Up
           </Button>
